@@ -88,15 +88,13 @@ async function toggleDarkMode() {
           deadlineDate = date[1].trim();
           
           //get class sidebar and add deadlinedate as p element
-          var sidebar = doc.getElementsByClassName('sidebar');
-          console.log(sidebar)
+          var sidebar = doc.getElementsByClassName('scroll-sidebar');
           
-          //add p to sidebar
-          var p = document.createElement("p");
-          var text = document.createTextNode(deadlineDate);
-          p.appendChild(text);
+          //append deadline date to the sidebar
+          var p = document.createElement('p');
+          p.innerHTML = deadlineDate;
           sidebar[0].appendChild(p);
-          console.log(sidebar[0])
+
           
         
         }
