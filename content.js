@@ -6,6 +6,7 @@ async function toggleDarkMode() {
     /* Example dark mode styles */
     * {
       background-color: #121212 !important;
+      background: #121212 !important;
       color: #ffffff !important;
     }
   `;
@@ -92,7 +93,7 @@ toggleDarkMode();
   //fetch data from tugas links
   var newData = [];
   for(var i = 0; i < data.length; i++) {
-
+    var tempData = data[i];
     fetch(data[i])
     .then(response => response.text())
     .then(text => {
@@ -103,6 +104,7 @@ toggleDarkMode();
       //get second element h3
       var h3 = doc.getElementsByTagName('h3');
       var collegeSubjectTitle = h3[1].innerText;
+      console.log(collegeSubjectTitle)
 
       //get table row contains 'Waktu Pengumpulan'
       var table = doc.getElementsByTagName('tr');
@@ -131,10 +133,27 @@ toggleDarkMode();
           var currentDate = new Date();
 
           //check if there's a deadline assingment
-          if (currentDate < dateObject) {
+          if (currentDate > dateObject) {
+            //save college subject title and deadline date as object 
+            var obj = {
+              collegeSubjectTitle: collegeSubjectTitle,
+              deadlineDate: deadlineDate
+            }
+            
+            newData.push(obj);
+
            //get class sidebar and add deadlinedate as p element
             var sidebar = document.getElementsByClassName('scroll-sidebar');
             
+            //create a href to contain div
+            var a = document.createElement('a');
+            //add href to a
+            a.href = tempData; //data belum ganti tapi udah fetch selanjutnya, terjadi bottleneck di fetch
+            //add target blank to a
+            a.target = "_blank";
+            //append a to sidebar
+            sidebar[0].appendChild(a);
+
             //create div element and make it like card with border radius
             var div = document.createElement('div');
             //add padding to div
@@ -164,8 +183,9 @@ toggleDarkMode();
             p.innerHTML = "Deadline: " + deadlineDate;
 
             div.appendChild(p);
+            a.appendChild(div);
 
-            sidebar[0].appendChild(div);
+            sidebar[0].appendChild(a);
           }
         }
       }
@@ -175,6 +195,9 @@ toggleDarkMode();
     });
 
   }
+
+  //set new data to local storage
+  localStorage.setItem('deadine', JSON.stringify(newData));
   
   sidebar[0].removeChild(divLoading);
   divLoading.remove();

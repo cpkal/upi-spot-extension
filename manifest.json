@@ -1,17 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "Dark Mode Extension",
+  "name": "SPOT UPI Premium",
   "version": "1.0.0",
   "description": "Enable dark mode on all websites.",
-  "permissions": ["storage", "activeTab", "scripting"],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "assets/mipmap-hdpi/ic_launcher.png",
-      "48": "assets/mipmap-hdpi/ic_launcher.png",
-      "128": "assets/mipmap-hdpi/ic_launcher.png"
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+
+  "content_scripts": [
+    {
+      "matches": ["https://spot.upi.edu/mhs"],
+      "js": ["content.js"]
     }
-  },
+  ],
   "icons": {
     "16": "assets/mipmap-hdpi/ic_launcher.png",
     "48": "assets/mipmap-hdpi/ic_launcher.png",
@@ -19,6 +18,5 @@
   },
   "background": {
     "service_worker": "background.js"
-  },
-  "permissions": ["storage", "activeTab", "scripting"]
+  }
 }
