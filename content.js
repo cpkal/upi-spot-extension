@@ -1,7 +1,6 @@
 // Toggle dark mode
 async function toggleDarkMode() {
 
-  
   // Your custom dark mode styles
   const darkModeStyles = `
     /* Example dark mode styles */
@@ -19,7 +18,34 @@ async function toggleDarkMode() {
     document.head.appendChild(styleTag);
   }
   styleTag.textContent = darkModeStyles;
+}
 
+toggleDarkMode();
+
+(function addListOfAssignmentTitleToSidebar() {
+  var sidebar = document.getElementsByClassName('scroll-sidebar');
+  var div = document.createElement('div');
+  //add padding to div
+  div.style.padding = "10px";
+  //add top border to div with 1px solid white
+  div.style.borderTop = "1px solid white";
+  //create h4 element
+  var h4 = document.createElement('h4');
+  h4.innerHTML = "Daftar Tugas";
+  div.appendChild(h4);
+  sidebar[0].appendChild(div);
+})();
+
+(async function getDeadlineOfAssignments() {
+  //add text loading animation to the sidebar and remove it after the data is fetched
+  var sidebar = document.getElementsByClassName('scroll-sidebar');
+  var divLoading = document.createElement('div');
+  divLoading.style.padding = "10px";
+  divLoading.style.textAlign = "center";
+  var p = document.createElement('p');
+  p.innerHTML = "Loading...";
+  divLoading.appendChild(p);
+  sidebar[0].appendChild(divLoading);
 
   //filtered link
   var filteredLinks = [];
@@ -50,6 +76,7 @@ async function toggleDarkMode() {
         if (links[i].href.startsWith("https://spot.upi.edu/mhs/topik")) {
           //save the href to array string
           data.push(links[i].href);
+          // console.log(links[i].href)
         }
       }
     });
@@ -58,19 +85,25 @@ async function toggleDarkMode() {
   //change link contains topik to tugas
   for (var i = 0; i < data.length; i++) {
     data[i] = data[i].replace("topik", "tugas");
+    // console.log(data[i])
   }
-  
 
+  
   //fetch data from tugas links
   var newData = [];
   for(var i = 0; i < data.length; i++) {
-    await fetch(data[i])
+
+    fetch(data[i])
     .then(response => response.text())
     .then(text => {
       //get the data from the text
       var parser = new DOMParser();
       var doc = parser.parseFromString(text, 'text/html');
       
+      //get second element h3
+      var h3 = doc.getElementsByTagName('h3');
+      var collegeSubjectTitle = h3[1].innerText;
+
       //get table row contains 'Waktu Pengumpulan'
       var table = doc.getElementsByTagName('tr');
       for (var i = 0; i < table.length; i++) {
@@ -84,26 +117,65 @@ async function toggleDarkMode() {
           date = date[2];
           date = date.split("S/D");
 
+          startDate = date[0].trim()
+
+          //remove 2 first character from startDate
+          startDate = startDate.substring(2);
+
           //clear space from date
           deadlineDate = date[1].trim();
-          
-          //get class sidebar and add deadlinedate as p element
-          var sidebar = doc.getElementsByClassName('scroll-sidebar');
-          
-          //append deadline date to the sidebar
-          var p = document.createElement('p');
-          p.innerHTML = deadlineDate;
-          sidebar[0].appendChild(p);
 
-          
-        
+          var parts = deadlineDate.split(/[- :]/);
+          // Note: months are 0-based
+          var dateObject = new Date(parts[2], parts[1] - 1, parts[0], parts[3], parts[4]);
+          var currentDate = new Date();
+
+          //check if there's a deadline assingment
+          if (currentDate < dateObject) {
+           //get class sidebar and add deadlinedate as p element
+            var sidebar = document.getElementsByClassName('scroll-sidebar');
+            
+            //create div element and make it like card with border radius
+            var div = document.createElement('div');
+            //add padding to div
+            div.style.padding = "10px";
+            //add top border to div with 1px solid white
+            div.style.border = "1px solid white";
+            //add border radius to div
+            div.style.borderRadius = "10px";
+            //add 10px margin left
+            div.style.marginLeft = "10px";
+            //add 10px margin right
+            div.style.marginRight = "10px";
+            //add margin bottom 10px
+            div.style.marginBottom = "10px";
+            //center text
+            div.style.textAlign = "center";
+            //create h4 element
+            var h4 = document.createElement('h5');
+            //add college subject title to h4
+            h4.innerHTML = collegeSubjectTitle;
+            //append h4 to div
+            div.appendChild(h4);
+
+            //append deadline date to the sidebar
+            var p = document.createElement('p');
+            
+            p.innerHTML = "Deadline: " + deadlineDate;
+
+            div.appendChild(p);
+
+            sidebar[0].appendChild(div);
+          }
         }
       }
+
+      //remove divLoading
+      
     });
+
   }
-
-  console.log(newData)
-}
-
-// Call the function to toggle dark mode
-toggleDarkMode();
+  
+  sidebar[0].removeChild(divLoading);
+  divLoading.remove();
+})();
