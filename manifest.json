@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "SPOT UPI Premium",
+  "name": "SPOT UPI: Assignment List",
   "version": "1.0.0",
-  "description": "Enable dark mode on all websites.",
+  "description": "Enable SPOT UPI with assignment list and dark mode features",
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
 
   "content_scripts": [
