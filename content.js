@@ -2,6 +2,8 @@ var sidebar = document.getElementsByClassName('scroll-sidebar');
 
 function addListOfAssignmentToSidebar(assignment) {
   var a = document.createElement('a');
+  a.style.textDecoration = "none";
+  a.style.color = "black";
   a.href = assignment.linkToAssignmentPage
   a.target = "_blank"; 
   var div = document.createElement('div');
@@ -10,12 +12,21 @@ function addListOfAssignmentToSidebar(assignment) {
   //create icon that implies assignment done or not inside div 
   
   div.style.padding = "10px";
-  div.style.border = "1px solid white";
+  div.style.border = "1px solid black";
   div.style.borderRadius = "10px";
   div.style.marginLeft = "10px";
   div.style.marginRight = "10px";
   div.style.marginBottom = "10px";
   div.style.textAlign = "center";
+  //create hover animation for div
+  div.style.transition = "0.3s";
+  div.style.cursor = "pointer";
+  div.onmouseover = function() {
+    div.style.backgroundColor = "lightgrey";
+  }
+  div.onmouseout = function() {
+    div.style.backgroundColor = "white";
+  }
   var circle = document.createElement('div');
   div.appendChild(circle);
   h4.innerHTML = assignment.collegeSubjectName;
@@ -32,24 +43,24 @@ function addListOfAssignmentToLocalStorage(assignment) {
   localStorage.setItem('assignments', JSON.stringify(assignments));
 }
 
-(function toggleDarkMode() {
-  const darkModeStyles = `
-    /* Example dark mode styles */
-    * {
-      background-color: #121212 !important;
-      background: #121212 !important;
-      color: #ffffff !important;
-    }
-  `;
+// (function toggleDarkMode() {
+//   const darkModeStyles = `
+//     /* Example dark mode styles */
+//     * {
+//       background-color: #121212 !important;
+//       background: #121212 !important;
+//       color: #ffffff !important;
+//     }
+//   `;
 
-  let styleTag = document.getElementById('dark-mode-style');
-  if (!styleTag) {
-    styleTag = document.createElement('style');
-    styleTag.setAttribute('id', 'dark-mode-style');
-    document.head.appendChild(styleTag);
-  }
-  styleTag.textContent = darkModeStyles;
-})();
+//   let styleTag = document.getElementById('dark-mode-style');
+//   if (!styleTag) {
+//     styleTag = document.createElement('style');
+//     styleTag.setAttribute('id', 'dark-mode-style');
+//     document.head.appendChild(styleTag);
+//   }
+//   styleTag.textContent = darkModeStyles;
+// })();
 
 (function addListOfAssignmentTitleToSidebar() {
   var div = document.createElement('div');
@@ -90,7 +101,7 @@ function addListOfAssignmentToLocalStorage(assignment) {
               Array.from(doc.getElementsByTagName('tr')).forEach(td => {
                 var trAssignmentStatus = doc.getElementsByTagName('tr')[5].children[1].innerText;
                 
-                var assignmentStatus = trAssignmentStatus.includes("Terkirim") ? "FINISHED" : "UNFINISHED"
+                var assignmentStatus = trAssignmentStatus.includes("Terkirim") ? "Selesai" : "Belum Selesai"
 
                 if(td !== undefined) {
                   if(td.innerText.includes("Waktu Pengumpulan")) {
