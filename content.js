@@ -133,7 +133,7 @@ toggleDarkMode();
           var currentDate = new Date();
 
           //check if there's a deadline assingment
-          if (currentDate > dateObject) {
+          if (currentDate < dateObject) {
             //save college subject title and deadline date as object 
             var obj = {
               collegeSubjectTitle: collegeSubjectTitle,
